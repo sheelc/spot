@@ -77,8 +77,7 @@ func PlayTrack(trackUri string) error {
 	return cmd.Run()
 }
 
-func (c *Client) Search(searchStr string, st client.SearchType) (*client.SearchResult, error) {
-	limit := 10
+func (c *Client) Search(searchStr string, st client.SearchType, limit int) (*client.SearchResult, error) {
 	opts := client.Options{
 		Limit: &limit,
 	}

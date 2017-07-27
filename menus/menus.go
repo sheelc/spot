@@ -5,6 +5,7 @@ import (
 	client "github.com/zmb3/spotify"
 	"spot/alfred"
 	"spot/spotify"
+	"strings"
 )
 
 func SetupAuthMenu() error {
@@ -96,7 +97,7 @@ func StatusMenu(spotifyStatus spotify.Status) error {
 					Path: "icons/artist.png",
 				},
 				Valid:        newFalse(),
-				Autocomplete: fmt.Sprintf("-artist=\"%s\"", spotifyStatus.Artist),
+				Autocomplete: fmt.Sprintf("-artist=\"%s\" ", spotifyStatus.Artist),
 			},
 			alfred.AlfredItem{
 				Title:    spotifyStatus.Album,
@@ -105,7 +106,7 @@ func StatusMenu(spotifyStatus spotify.Status) error {
 					Path: "icons/album.png",
 				},
 				Valid:        newFalse(),
-				Autocomplete: fmt.Sprintf("-album=\"%s\"", spotifyStatus.Album),
+				Autocomplete: fmt.Sprintf("-album=\"%s\" ", spotifyStatus.Album),
 			},
 		},
 	}
@@ -151,13 +152,14 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 	return alfred.PrintMenu(items)
 }
 
-func AlbumDetailMenu(album string) error {
+func AlbumDetailMenu(album string, args []string) error {
 	spotifyClient, err := spotify.NewClient()
 	if err != nil {
 		return err
 	}
 
-	searchResults, err := spotifyClient.Search(fmt.Sprintf("album:%s", album), client.SearchTypeTrack)
+	searchString := strings.Join(args, " ")
+	searchResults, err := spotifyClient.Search(fmt.Sprintf("album:\"%s\" %s", album, searchString), client.SearchTypeTrack, 12)
 	if err != nil {
 		return err
 	}
@@ -184,26 +186,40 @@ func AlbumDetailMenu(album string) error {
 	return alfred.PrintMenu(alfredItems)
 }
 
-func ArtistDetailMenu(artist string) error {
+func ArtistDetailMenu(artist string, args []string) error {
 	spotifyClient, err := spotify.NewClient()
 	if err != nil {
 		return err
 	}
 
-	searchResults, err := spotifyClient.Search(fmt.Sprintf("artist:%s", artist), client.SearchTypeAlbum)
+	searchString := strings.Join(args, " ")
+	searchResults, err := spotifyClient.Search(fmt.Sprintf("artist:\"%s\" %s", artist, searchString), client.SearchTypeAlbum|client.SearchTypeTrack, 3)
 	if err != nil {
 		return err
 	}
 
 	albums := searchResults.Albums.Albums
-	items := make([]alfred.AlfredItem, 0, len(albums))
+	tracks := searchResults.Tracks.Tracks
+	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks))
+
+	for _, track := range tracks {
+		items = append(items, alfred.AlfredItem{
+			Uid:   string(track.URI),
+			Title: track.Name,
+			Icon: alfred.AlfredIcon{
+				Path: "icons/track.png",
+			},
+			Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
+		})
+
+	}
 
 	for _, album := range albums {
 		items = append(items, alfred.AlfredItem{
 			Uid:          string(album.URI),
 			Title:        album.Name,
 			Valid:        newFalse(),
-			Autocomplete: fmt.Sprintf("-artist=\"%s\" -album=\"%s\"", artist, album.Name),
+			Autocomplete: fmt.Sprintf("-artist=\"%s\" -album=\"%s\" ", artist, album.Name),
 			Icon: alfred.AlfredIcon{
 				Path: "icons/album.png",
 			},

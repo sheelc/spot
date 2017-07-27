@@ -22,8 +22,9 @@ func main() {
 
 	flag.Parse()
 
+	args := flag.Args()
+
 	if !setupComplete(*actionPtr) {
-		args := flag.Args()
 		err := setup.Creds(args)
 		if err != nil {
 			log.Fatal(err)
@@ -64,7 +65,7 @@ func main() {
 	}
 
 	if *albumPtr != "" {
-		err := menus.AlbumDetailMenu(*albumPtr)
+		err := menus.AlbumDetailMenu(*albumPtr, args)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -72,7 +73,7 @@ func main() {
 	}
 
 	if *artistPtr != "" {
-		err := menus.ArtistDetailMenu(*artistPtr)
+		err := menus.ArtistDetailMenu(*artistPtr, args)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -85,13 +86,13 @@ func main() {
 		return
 	}
 
-	if len(flag.Args()) > 0 && (flag.Args()[0] == "c") {
+	if len(args) > 0 && (args[0] == "c") {
 		err = menus.ControlsMenu(spotifyStatus)
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
-	} else if len(flag.Args()) > 0 && (flag.Args()[0] == "auth") {
+	} else if len(args) > 0 && (args[0] == "auth") {
 		err = menus.SetupAuthMenu()
 		if err != nil {
 			log.Fatal(err)

@@ -113,6 +113,5 @@ func main() {
 	}
 }
 
-// TODO: better search handling of albums, use URI? always look up URI?
 // TODO: playlist behavior, playlist cache
 // TODO: alternate actions

@@ -8,10 +8,10 @@ import (
 	"spot/spotify"
 )
 
-func setupComplete(action string) bool {
+func skipForcedSetup(action string) bool {
 	return spotify.IsDataSet(spotify.ClientId) &&
 		spotify.IsDataSet(spotify.ClientSecret) &&
-		(spotify.IsDataSet(spotify.Token) || action == "auth")
+		(action == "server" || (spotify.IsDataSet(spotify.Token) || action == "auth"))
 }
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 
 	args := flag.Args()
 
-	if !setupComplete(*actionPtr) {
+	if !skipForcedSetup(*actionPtr) {
 		err := setup.Creds(args)
 		if err != nil {
 			log.Fatal(err)

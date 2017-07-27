@@ -1,7 +1,6 @@
 package setup
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -19,9 +18,12 @@ func LaunchAuth() error {
 
 	url := auth.AuthURL("state")
 
-	workflowData := os.Getenv("alfred_workflow_data")
-	daemon := exec.Command("/bin/bash", "-c", fmt.Sprintf("alfred_workflow_data=%s ./spot --action=server & last_pid=$!; sleep 600; kill -9 $last_pid", workflowData))
-	daemon.Start()
+	daemon := exec.Command("./spot", "--action=server")
+	daemon.Env = os.Environ()
+	err = daemon.Start()
+	if err != nil {
+		return err
+	}
 
 	time.Sleep(1 * time.Second)
 
@@ -98,6 +100,11 @@ func Creds(args []string) error {
 }
 
 func Server() error {
+	go func() {
+		time.Sleep(5 * time.Minute)
+		os.Exit(0)
+	}()
+
 	http.HandleFunc("/callback", callbackHandler)
 	return http.ListenAndServe(":11075", nil)
 }

@@ -98,6 +98,12 @@ func main() {
 			log.Fatal(err)
 			return
 		}
+	} else if len(args) > 0 {
+		err = menus.SearchMenu(args)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
 	} else {
 		err = menus.StatusMenu(spotifyStatus)
 		if err != nil {

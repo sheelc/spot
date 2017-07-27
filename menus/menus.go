@@ -152,6 +152,47 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 	return alfred.PrintMenu(items)
 }
 
+func albumItem(album client.SimpleAlbum) alfred.AlfredItem {
+	return alfred.AlfredItem{
+		Uid:          string(album.URI),
+		Title:        album.Name,
+		Valid:        newFalse(),
+		Autocomplete: fmt.Sprintf("-album=\"%s\" ", album.Name),
+		Icon: alfred.AlfredIcon{
+			Path: "icons/album.png",
+		},
+	}
+}
+
+func albumItemWithArtist(album client.SimpleAlbum, artist string) alfred.AlfredItem {
+	item := albumItem(album)
+	item.Autocomplete = fmt.Sprintf("-artist=\"%s\" -album=\"%s\" ", artist, album.Name)
+	return item
+}
+
+func trackItem(track client.FullTrack) alfred.AlfredItem {
+	return alfred.AlfredItem{
+		Uid:   string(track.URI),
+		Title: track.Name,
+		Icon: alfred.AlfredIcon{
+			Path: "icons/track.png",
+		},
+		Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
+	}
+}
+
+func artistItem(artist client.FullArtist) alfred.AlfredItem {
+	return alfred.AlfredItem{
+		Uid:   string(artist.URI),
+		Title: artist.Name,
+		Icon: alfred.AlfredIcon{
+			Path: "icons/artist.png",
+		},
+		Valid:        newFalse(),
+		Autocomplete: fmt.Sprintf("-artist=\"%s\" ", artist.Name),
+	}
+}
+
 func AlbumDetailMenu(album string, args []string) error {
 	spotifyClient, err := spotify.NewClient()
 	if err != nil {
@@ -168,14 +209,7 @@ func AlbumDetailMenu(album string, args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, alfred.AlfredItem{
-			Uid:   string(track.URI),
-			Title: track.Name,
-			Icon: alfred.AlfredIcon{
-				Path: "icons/track.png",
-			},
-			Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
-		})
+		items = append(items, trackItem(track))
 
 	}
 
@@ -203,27 +237,12 @@ func ArtistDetailMenu(artist string, args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, alfred.AlfredItem{
-			Uid:   string(track.URI),
-			Title: track.Name,
-			Icon: alfred.AlfredIcon{
-				Path: "icons/track.png",
-			},
-			Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
-		})
+		items = append(items, trackItem(track))
 
 	}
 
 	for _, album := range albums {
-		items = append(items, alfred.AlfredItem{
-			Uid:          string(album.URI),
-			Title:        album.Name,
-			Valid:        newFalse(),
-			Autocomplete: fmt.Sprintf("-artist=\"%s\" -album=\"%s\" ", artist, album.Name),
-			Icon: alfred.AlfredIcon{
-				Path: "icons/album.png",
-			},
-		})
+		items = append(items, albumItemWithArtist(album, artist))
 
 	}
 
@@ -252,40 +271,17 @@ func SearchMenu(args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks)+len(artists))
 
 	for _, track := range tracks {
-		items = append(items, alfred.AlfredItem{
-			Uid:   string(track.URI),
-			Title: track.Name,
-			Icon: alfred.AlfredIcon{
-				Path: "icons/track.png",
-			},
-			Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
-		})
+		items = append(items, trackItem(track))
 
 	}
 
 	for _, artist := range artists {
-		items = append(items, alfred.AlfredItem{
-			Uid:   string(artist.URI),
-			Title: artist.Name,
-			Icon: alfred.AlfredIcon{
-				Path: "icons/artist.png",
-			},
-			Valid:        newFalse(),
-			Autocomplete: fmt.Sprintf("-artist=\"%s\" ", artist.Name),
-		})
+		items = append(items, artistItem(artist))
 
 	}
 
 	for _, album := range albums {
-		items = append(items, alfred.AlfredItem{
-			Uid:          string(album.URI),
-			Title:        album.Name,
-			Valid:        newFalse(),
-			Autocomplete: fmt.Sprintf("-album=\"%s\" ", album.Name),
-			Icon: alfred.AlfredIcon{
-				Path: "icons/album.png",
-			},
-		})
+		items = append(items, albumItem(album))
 
 	}
 

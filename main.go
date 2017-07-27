@@ -112,6 +112,3 @@ func main() {
 		}
 	}
 }
-
-// TODO: playlist behavior, playlist cache
-// TODO: alternate actions

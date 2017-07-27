@@ -13,3 +13,7 @@ That's it!
 #### Acknowledgements
 ---
 This workflow is mainly based on the work in [Spotify for Alfred](https://github.com/citelao/Spotify-for-Alfred) written by [citelao](https://github.com/citelao) and uses the same interface/Spotify tricks as in that workflow. This is mainly an exercise in determining if we can make it faster!
+
+#### Future improvements:
+- Take into account user playlists
+- Control menu can change repeat/shuffle

@@ -124,14 +124,6 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 	items := alfred.AlfredItems{
 		Items: []alfred.AlfredItem{
 			alfred.AlfredItem{
-				Title:    spotifyStatus.SongTitle,
-				Subtitle: fmt.Sprintf("%s by %s", spotifyStatus.Album, spotifyStatus.Artist),
-				Arg:      "--action playpause",
-				Icon: alfred.AlfredIcon{
-					Path: playerStatusIcon,
-				},
-			},
-			alfred.AlfredItem{
 				Title: "Next Track",
 				Arg:   "--action next",
 				Icon: alfred.AlfredIcon{
@@ -143,6 +135,14 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 				Arg:   "--action previous",
 				Icon: alfred.AlfredIcon{
 					Path: "icons/previous.png",
+				},
+			},
+			alfred.AlfredItem{
+				Title:    spotifyStatus.SongTitle,
+				Subtitle: fmt.Sprintf("%s by %s", spotifyStatus.Album, spotifyStatus.Artist),
+				Arg:      "--action playpause",
+				Icon: alfred.AlfredIcon{
+					Path: playerStatusIcon,
 				},
 			},
 		},

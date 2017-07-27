@@ -81,13 +81,17 @@ func setupClientSecret(args []string) error {
 	return nil
 }
 
-func ClientCreds(args []string) error {
+func Creds(args []string) error {
 	if !spotify.IsDataSet(spotify.ClientId) {
 		return setupClientId(args)
 	}
 
 	if !spotify.IsDataSet(spotify.ClientSecret) {
 		return setupClientSecret(args)
+	}
+
+	if !spotify.IsDataSet(spotify.Token) {
+		return menus.SetupAuthMenu()
 	}
 
 	return nil

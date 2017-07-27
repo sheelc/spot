@@ -8,6 +8,12 @@ import (
 	"spot/spotify"
 )
 
+func setupComplete(action string) bool {
+	return spotify.IsDataSet(spotify.ClientId) &&
+		spotify.IsDataSet(spotify.ClientSecret) &&
+		(spotify.IsDataSet(spotify.Token) || action == "auth")
+}
+
 func main() {
 	actionPtr := flag.String("action", "", "action to take")
 	artistPtr := flag.String("artist", "", "artist to focus")
@@ -16,9 +22,9 @@ func main() {
 
 	flag.Parse()
 
-	if !spotify.IsDataSet(spotify.ClientId) || !spotify.IsDataSet(spotify.ClientSecret) {
+	if !setupComplete(*actionPtr) {
 		args := flag.Args()
-		err := setup.ClientCreds(args)
+		err := setup.Creds(args)
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -86,7 +92,7 @@ func main() {
 			return
 		}
 	} else if len(flag.Args()) > 0 && (flag.Args()[0] == "auth") {
-		err = menus.SetupMenu()
+		err = menus.SetupAuthMenu()
 		if err != nil {
 			log.Fatal(err)
 			return

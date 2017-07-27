@@ -7,7 +7,7 @@ import (
 	"spot/spotify"
 )
 
-func SetupMenu() error {
+func SetupAuthMenu() error {
 	items := alfred.AlfredItems{
 		Items: []alfred.AlfredItem{
 			alfred.AlfredItem{

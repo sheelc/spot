@@ -113,6 +113,7 @@ func AuthConfig() (*oauth2.Config, error) {
 }
 
 func Set(dataId string, data []byte) error {
+	_ = os.Mkdir(dataPath(""), 0755)
 	return ioutil.WriteFile(dataPath(dataId), data, 0644)
 }
 

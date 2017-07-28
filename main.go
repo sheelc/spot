@@ -43,6 +43,12 @@ func main() {
 				log.Fatal(err)
 				return
 			}
+		} else if action == "revealinspotify" {
+			err := spotify.Reveal(*contextPtr)
+			if err != nil {
+				log.Fatal(err)
+				return
+			}
 		} else if action == "auth" {
 			err := setup.LaunchAuth()
 			if err != nil {

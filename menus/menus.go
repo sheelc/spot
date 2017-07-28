@@ -178,6 +178,12 @@ func albumItem(album client.SimpleAlbum) alfred.AlfredItem {
 		Icon: alfred.AlfredIcon{
 			Path: "icons/album.png",
 		},
+		Mods: alfred.AlfredMods{
+			Ctrl: alfred.AlfredMod{
+				Arg:      fmt.Sprintf("--action revealinspotify --context %s", album.URI),
+				Subtitle: "Reveal in Spotify",
+			},
+		},
 	}
 }
 
@@ -205,6 +211,12 @@ func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
 			Path: "icons/track.png",
 		},
 		Arg: arg,
+		Mods: alfred.AlfredMods{
+			Ctrl: alfred.AlfredMod{
+				Arg:      fmt.Sprintf("--action revealinspotify --context %s", track.URI),
+				Subtitle: "Reveal in Spotify",
+			},
+		},
 	}
 }
 
@@ -218,6 +230,12 @@ func artistItem(artist client.FullArtist) alfred.AlfredItem {
 		},
 		Valid:        newFalse(),
 		Autocomplete: fmt.Sprintf("-artist=\"%s\" ", artist.Name),
+		Mods: alfred.AlfredMods{
+			Ctrl: alfred.AlfredMod{
+				Arg:      fmt.Sprintf("--action revealinspotify --context %s", artist.URI),
+				Subtitle: "Reveal in Spotify",
+			},
+		},
 	}
 }
 

@@ -77,6 +77,11 @@ func PlayTrack(trackUri string, contextUri string) error {
 	return cmd.Run()
 }
 
+func Reveal(contextUri string) error {
+	cmd := exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Spotify\" to open location \"%s\" & (activate)", contextUri))
+	return cmd.Run()
+}
+
 func (c *Client) Search(searchStr string, st client.SearchType, limit int) (*client.SearchResult, error) {
 	opts := client.Options{
 		Limit: &limit,

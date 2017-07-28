@@ -10,6 +10,18 @@ type AlfredIcon struct {
 	Path string `json:"path,omitempty"`
 }
 
+type AlfredMod struct {
+	Valid    bool   `json:"valid,omitempty"`
+	Arg      string `json:"arg,omitempty"`
+	Subtitle string `json:"subtitle,omitempty"`
+}
+
+type AlfredMods struct {
+	Ctrl AlfredMod `json:"ctrl,omitempty"`
+	Alt  AlfredMod `json:"alt,omitempty"`
+	Cmd  AlfredMod `json:"cmd,omitempty"`
+}
+
 type AlfredItem struct {
 	Uid          string     `json:"uid,omitempty"`
 	Type         string     `json:"type,omitempty"`
@@ -19,6 +31,7 @@ type AlfredItem struct {
 	Autocomplete string     `json:"autocomplete,omitempty"`
 	Valid        *bool      `json:"valid,omitempty"`
 	Icon         AlfredIcon `json:"icon,omitempty"`
+	Mods         AlfredMods `json:"mods,omitempty"`
 }
 
 type AlfredItems struct {

@@ -14,11 +14,11 @@ const (
 )
 
 func SetupAuthMenu() error {
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "Authenticate to Spot",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: "icons/configuration.png",
 				},
 				Valid:        newFalse(),
@@ -31,9 +31,9 @@ func SetupAuthMenu() error {
 }
 
 func ClientIdMenuInstruction() error {
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "Paste the Client Id above and press enter",
 			},
 		},
@@ -43,9 +43,9 @@ func ClientIdMenuInstruction() error {
 }
 
 func ClientIdMenuStepFinished() error {
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "The client id is set, press enter to close",
 			},
 		},
@@ -55,9 +55,9 @@ func ClientIdMenuStepFinished() error {
 }
 
 func ClientSecretMenuInstruction() error {
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "Paste the Client Secret above and press enter",
 			},
 		},
@@ -67,9 +67,9 @@ func ClientSecretMenuInstruction() error {
 }
 
 func ClientSecretMenuStepFinished() error {
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "Setup is now complete! Press enter to close",
 			},
 		},
@@ -85,29 +85,29 @@ func StatusMenu(spotifyStatus spotify.Status) error {
 		playerStatusIcon = "icons/paused.png"
 	}
 
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title:    spotifyStatus.SongTitle,
 				Subtitle: fmt.Sprintf("%s by %s", spotifyStatus.Album, spotifyStatus.Artist),
 				Arg:      "-action playpause",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: playerStatusIcon,
 				},
 			},
-			alfred.AlfredItem{
+			alfred.Item{
 				Title:    spotifyStatus.Artist,
 				Subtitle: "More from this artist...",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: "icons/artist.png",
 				},
 				Valid:        newFalse(),
 				Autocomplete: fmt.Sprintf("-artist=\"%s\" ", spotifyStatus.Artist),
 			},
-			alfred.AlfredItem{
+			alfred.Item{
 				Title:    spotifyStatus.Album,
 				Subtitle: "More from this album...",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: "icons/album.png",
 				},
 				Valid:        newFalse(),
@@ -127,27 +127,27 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 		playerStatusIcon = "icons/paused.png"
 	}
 
-	items := alfred.AlfredItems{
-		Items: []alfred.AlfredItem{
-			alfred.AlfredItem{
+	items := alfred.Items{
+		Items: []alfred.Item{
+			alfred.Item{
 				Title: "Next Track",
 				Arg:   "--action next",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: "icons/next.png",
 				},
 			},
-			alfred.AlfredItem{
+			alfred.Item{
 				Title: "Previous Track",
 				Arg:   "--action previous",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: "icons/previous.png",
 				},
 			},
-			alfred.AlfredItem{
+			alfred.Item{
 				Title:    spotifyStatus.SongTitle,
 				Subtitle: fmt.Sprintf("%s by %s", spotifyStatus.Album, spotifyStatus.Artist),
 				Arg:      "--action playpause",
-				Icon: alfred.AlfredIcon{
+				Icon: alfred.Icon{
 					Path: playerStatusIcon,
 				},
 			},
@@ -169,17 +169,17 @@ func popularityToMeter(popularity int) string {
 	return meter
 }
 
-func albumItem(album client.SimpleAlbum) alfred.AlfredItem {
-	return alfred.AlfredItem{
+func albumItem(album client.SimpleAlbum) alfred.Item {
+	return alfred.Item{
 		Uid:          string(album.URI),
 		Title:        album.Name,
 		Valid:        newFalse(),
 		Autocomplete: fmt.Sprintf("-album=\"%s\" ", album.Name),
-		Icon: alfred.AlfredIcon{
+		Icon: alfred.Icon{
 			Path: "icons/album.png",
 		},
-		Mods: alfred.AlfredMods{
-			Ctrl: alfred.AlfredMod{
+		Mods: alfred.Mods{
+			Ctrl: alfred.Mod{
 				Arg:      fmt.Sprintf("--action revealinspotify --context %s", album.URI),
 				Subtitle: "Reveal in Spotify",
 			},
@@ -187,13 +187,13 @@ func albumItem(album client.SimpleAlbum) alfred.AlfredItem {
 	}
 }
 
-func albumItemWithArtist(album client.SimpleAlbum, artist string) alfred.AlfredItem {
+func albumItemWithArtist(album client.SimpleAlbum, artist string) alfred.Item {
 	item := albumItem(album)
 	item.Autocomplete = fmt.Sprintf("-artist=\"%s\" -album=\"%s\" ", artist, album.Name)
 	return item
 }
 
-func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
+func trackItem(track client.FullTrack, contextType int) alfred.Item {
 	var arg string
 	if contextType == albumContext {
 		arg = fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Album.URI)
@@ -203,16 +203,16 @@ func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
 		arg = fmt.Sprintf("--action playtrack --track %s", track.URI)
 	}
 
-	return alfred.AlfredItem{
+	return alfred.Item{
 		Uid:      string(track.URI),
 		Title:    track.Name,
 		Subtitle: popularityToMeter(track.Popularity),
-		Icon: alfred.AlfredIcon{
+		Icon: alfred.Icon{
 			Path: "icons/track.png",
 		},
 		Arg: arg,
-		Mods: alfred.AlfredMods{
-			Ctrl: alfred.AlfredMod{
+		Mods: alfred.Mods{
+			Ctrl: alfred.Mod{
 				Arg:      fmt.Sprintf("--action revealinspotify --context %s", track.URI),
 				Subtitle: "Reveal in Spotify",
 			},
@@ -220,18 +220,18 @@ func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
 	}
 }
 
-func artistItem(artist client.FullArtist) alfred.AlfredItem {
-	return alfred.AlfredItem{
+func artistItem(artist client.FullArtist) alfred.Item {
+	return alfred.Item{
 		Uid:      string(artist.URI),
 		Title:    artist.Name,
 		Subtitle: popularityToMeter(artist.Popularity),
-		Icon: alfred.AlfredIcon{
+		Icon: alfred.Icon{
 			Path: "icons/artist.png",
 		},
 		Valid:        newFalse(),
 		Autocomplete: fmt.Sprintf("-artist=\"%s\" ", artist.Name),
-		Mods: alfred.AlfredMods{
-			Ctrl: alfred.AlfredMod{
+		Mods: alfred.Mods{
+			Ctrl: alfred.Mod{
 				Arg:      fmt.Sprintf("--action revealinspotify --context %s", artist.URI),
 				Subtitle: "Reveal in Spotify",
 			},
@@ -252,14 +252,14 @@ func AlbumDetailMenu(album string, args []string) error {
 	}
 
 	tracks := searchResults.Tracks.Tracks
-	items := make([]alfred.AlfredItem, 0, len(tracks))
+	items := make([]alfred.Item, 0, len(tracks))
 
 	for _, track := range tracks {
 		items = append(items, trackItem(track, albumContext))
 
 	}
 
-	alfredItems := alfred.AlfredItems{
+	alfredItems := alfred.Items{
 		Items: items,
 	}
 
@@ -280,7 +280,7 @@ func ArtistDetailMenu(artist string, args []string) error {
 
 	albums := searchResults.Albums.Albums
 	tracks := searchResults.Tracks.Tracks
-	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks))
+	items := make([]alfred.Item, 0, len(albums)+len(tracks))
 
 	for _, track := range tracks {
 		items = append(items, trackItem(track, artistContext))
@@ -292,7 +292,7 @@ func ArtistDetailMenu(artist string, args []string) error {
 
 	}
 
-	alfredItems := alfred.AlfredItems{
+	alfredItems := alfred.Items{
 		Items: items,
 	}
 
@@ -314,7 +314,7 @@ func SearchMenu(args []string) error {
 	albums := searchResults.Albums.Albums
 	tracks := searchResults.Tracks.Tracks
 	artists := searchResults.Artists.Artists
-	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks)+len(artists))
+	items := make([]alfred.Item, 0, len(albums)+len(tracks)+len(artists))
 
 	for _, track := range tracks {
 		items = append(items, trackItem(track, artistContext))
@@ -331,7 +331,7 @@ func SearchMenu(args []string) error {
 
 	}
 
-	alfredItems := alfred.AlfredItems{
+	alfredItems := alfred.Items{
 		Items: items,
 	}
 

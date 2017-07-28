@@ -157,6 +157,18 @@ func ControlsMenu(spotifyStatus spotify.Status) error {
 	return alfred.PrintMenu(items)
 }
 
+func popularityToMeter(popularity int) string {
+	meter := ""
+	for i := 0; i <= 100; i = i + 10 {
+		if i < popularity {
+			meter = meter + "■"
+		} else {
+			meter = meter + "□"
+		}
+	}
+	return meter
+}
+
 func albumItem(album client.SimpleAlbum) alfred.AlfredItem {
 	return alfred.AlfredItem{
 		Uid:          string(album.URI),
@@ -186,8 +198,9 @@ func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
 	}
 
 	return alfred.AlfredItem{
-		Uid:   string(track.URI),
-		Title: track.Name,
+		Uid:      string(track.URI),
+		Title:    track.Name,
+		Subtitle: popularityToMeter(track.Popularity),
 		Icon: alfred.AlfredIcon{
 			Path: "icons/track.png",
 		},
@@ -197,8 +210,9 @@ func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
 
 func artistItem(artist client.FullArtist) alfred.AlfredItem {
 	return alfred.AlfredItem{
-		Uid:   string(artist.URI),
-		Title: artist.Name,
+		Uid:      string(artist.URI),
+		Title:    artist.Name,
+		Subtitle: popularityToMeter(artist.Popularity),
 		Icon: alfred.AlfredIcon{
 			Path: "icons/artist.png",
 		},

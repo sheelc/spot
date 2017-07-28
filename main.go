@@ -19,6 +19,7 @@ func main() {
 	artistPtr := flag.String("artist", "", "artist to focus")
 	albumPtr := flag.String("album", "", "album to focus")
 	trackPtr := flag.String("track", "", "track to play")
+	contextPtr := flag.String("context", "", "context to use for track to play")
 
 	flag.Parse()
 
@@ -37,7 +38,7 @@ func main() {
 	if *actionPtr != "" {
 		action := *actionPtr
 		if action == "playtrack" {
-			err := spotify.PlayTrack(*trackPtr)
+			err := spotify.PlayTrack(*trackPtr, *contextPtr)
 			if err != nil {
 				log.Fatal(err)
 				return

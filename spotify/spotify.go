@@ -72,8 +72,8 @@ func ApplyControl(control string) error {
 	return cmd.Run()
 }
 
-func PlayTrack(trackUri string) error {
-	cmd := exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Spotify\" to play track \"%s\"", trackUri))
+func PlayTrack(trackUri string, contextUri string) error {
+	cmd := exec.Command("osascript", "-e", fmt.Sprintf("tell application \"Spotify\" to play track \"%s\" in context \"%s\"", trackUri, contextUri))
 	return cmd.Run()
 }
 

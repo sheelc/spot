@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+const (
+	albumContext  = iota
+	artistContext = iota
+)
+
 func SetupAuthMenu() error {
 	items := alfred.AlfredItems{
 		Items: []alfred.AlfredItem{
@@ -170,14 +175,23 @@ func albumItemWithArtist(album client.SimpleAlbum, artist string) alfred.AlfredI
 	return item
 }
 
-func trackItem(track client.FullTrack) alfred.AlfredItem {
+func trackItem(track client.FullTrack, contextType int) alfred.AlfredItem {
+	var arg string
+	if contextType == albumContext {
+		arg = fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Album.URI)
+	} else if contextType == artistContext {
+		arg = fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Artists[0].URI)
+	} else {
+		arg = fmt.Sprintf("--action playtrack --track %s", track.URI)
+	}
+
 	return alfred.AlfredItem{
 		Uid:   string(track.URI),
 		Title: track.Name,
 		Icon: alfred.AlfredIcon{
 			Path: "icons/track.png",
 		},
-		Arg: fmt.Sprintf("--action playtrack --track %s", track.URI),
+		Arg: arg,
 	}
 }
 
@@ -209,7 +223,7 @@ func AlbumDetailMenu(album string, args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track))
+		items = append(items, trackItem(track, albumContext))
 
 	}
 
@@ -237,7 +251,7 @@ func ArtistDetailMenu(artist string, args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track))
+		items = append(items, trackItem(track, artistContext))
 
 	}
 
@@ -271,7 +285,7 @@ func SearchMenu(args []string) error {
 	items := make([]alfred.AlfredItem, 0, len(albums)+len(tracks)+len(artists))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track))
+		items = append(items, trackItem(track, artistContext))
 
 	}
 

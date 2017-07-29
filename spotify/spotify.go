@@ -39,7 +39,7 @@ func NewClient() (*Client, error) {
 }
 
 func GetStatus() (Status, error) {
-	cmd := exec.Command("osascript", "-e", `return run script "tell application \"Spotify\"" & return & "name of current track & \"Ψ\" & album of current track & \"Ψ\" & artist of current track & \"Ψ\" & spotify url of current track & \"Ψ\" & player state" & return & "end tell"`)
+	cmd := exec.Command("osascript", "-e", `tell application "Spotify" to return name of current track & "Ψ" & album of current track & "Ψ" & artist of current track & "Ψ" & spotify url of current track & "Ψ" & player state`)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 

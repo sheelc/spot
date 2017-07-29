@@ -1,0 +1,27 @@
+{
+	"ImportPath": "spot",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/zmb3/spotify",
+			"Rev": "59ba3b693ce328fdf2448159e05c98f74b7eb66e"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "ab5485076ff3407ad2d02db054635913f017b0ed"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context/ctxhttp",
+			"Rev": "ab5485076ff3407ad2d02db054635913f017b0ed"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2",
+			"Rev": "b53b38ad8a6435bd399ea76d0fa74f23149cca4e"
+		},
+		{
+			"ImportPath": "golang.org/x/oauth2/internal",
+			"Rev": "b53b38ad8a6435bd399ea76d0fa74f23149cca4e"
+		}
+	]
+}

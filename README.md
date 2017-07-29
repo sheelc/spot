@@ -17,3 +17,4 @@ This workflow is mainly based on the work in [Spotify for Alfred](https://github
 #### Future improvements:
 - Take into account user playlists
 - Control menu can change repeat/shuffle
+- Handle no song playing case

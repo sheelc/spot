@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-const (
-	albumContext  = iota
-	artistContext = iota
-)
-
 func SetupAuthMenu() error {
 	items := alfred.Items{
 		Items: []alfred.Item{
@@ -193,16 +188,7 @@ func albumItemWithArtist(album client.SimpleAlbum, artist string) alfred.Item {
 	return item
 }
 
-func trackItem(track client.FullTrack, contextType int) alfred.Item {
-	var arg string
-	if contextType == albumContext {
-		arg = fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Album.URI)
-	} else if contextType == artistContext {
-		arg = fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Artists[0].URI)
-	} else {
-		arg = fmt.Sprintf("--action playtrack --track %s", track.URI)
-	}
-
+func trackItem(track client.FullTrack) alfred.Item {
 	return alfred.Item{
 		Uid:      string(track.URI),
 		Title:    track.Name,
@@ -210,7 +196,7 @@ func trackItem(track client.FullTrack, contextType int) alfred.Item {
 		Icon: alfred.Icon{
 			Path: "icons/track.png",
 		},
-		Arg: arg,
+		Arg: fmt.Sprintf("--action playtrack --track %s --context %s", track.URI, track.Album.URI),
 		Mods: alfred.Mods{
 			Ctrl: alfred.Mod{
 				Arg:      fmt.Sprintf("--action revealinspotify --context %s", track.URI),
@@ -255,7 +241,7 @@ func AlbumDetailMenu(album string, args []string) error {
 	items := make([]alfred.Item, 0, len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track, albumContext))
+		items = append(items, trackItem(track))
 
 	}
 
@@ -283,7 +269,7 @@ func ArtistDetailMenu(artist string, args []string) error {
 	items := make([]alfred.Item, 0, len(albums)+len(tracks))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track, artistContext))
+		items = append(items, trackItem(track))
 
 	}
 
@@ -317,7 +303,7 @@ func SearchMenu(args []string) error {
 	items := make([]alfred.Item, 0, len(albums)+len(tracks)+len(artists))
 
 	for _, track := range tracks {
-		items = append(items, trackItem(track, artistContext))
+		items = append(items, trackItem(track))
 
 	}
 
